@@ -1,13 +1,5 @@
 ## Onboarding Pains: Get new hires up and running faster and more efficiently
 
----
-title: Onboarding Pains: Get new hires up and running faster and more efficiently
-published: true
-description: Joining a new team can be challenging, it can be even harder if you have to read through very cryptic documentation to get up to speed with all the things you need to know in this new unfamiliar environment. I've certainly had a fair share of experience with difficult onboarding and in this article, I share some of them and how you can avoid them to help new hires become contributing members of your team faster and more efficiently. 
-tags: onboarding, team, leadership, culture 
-cover_image: https://dev-to-uploads.s3.amazonaws.com/uploads/articles/cvdgvsupkdmhgyvgeue0.jpg
----
-
 Wikipedia defines onboarding as the mechanism through which new employees acquire the necessary knowledge, skills, and behaviours to become effective organizational members and insiders.
 
 I started a new job recently with what I believe is an awesome company. I am a new hire at a company again, so I am going through the onboarding process again — one of the best onboarding processes I have ever gone through I must say. This got me reflecting on the onboarding experiences I have had.
