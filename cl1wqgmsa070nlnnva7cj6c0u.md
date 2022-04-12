@@ -1,13 +1,5 @@
 ## Explaining code quality to management: The technical debt metaphor
 
----
-title: Explaining code quality to management: The technical debt metaphor
-published: true
-description: Managing internal code quality is an increasingly critical aspect of producing cost-effective, timely, and high-quality software. But it can often be difficult to explain what this internal code quality is to non-technical people, unfortunately, management usually consists of non-technical people as far as coding is concerned. The technical debt metaphor is one way that can be used to clarify this. In this article, I will define external and internal quality and then talk about technical debt, it's definitions and how it is used as a metaphor for discussing quality with non-technical business people. 
-tags: technical debt, project management, code quality, management
-cover_image: https://thepracticaldev.s3.amazonaws.com/i/u5am6bureo9y0yejd51e.png
----
-
 Managing internal code quality is an increasingly critical aspect of producing cost-effective, timely, and high-quality software. But it can often be difficult to explain what this internal code quality is to non-technical people, unfortunately, management usually consists of non-technical people as far as coding is concerned. The technical debt metaphor is one way that can be used to clarify this. In this article, I will define external and internal quality and then talk about technical debt, it's definitions and how it is used as a metaphor for discussing quality with non-technical business people. 
 
 That said, if you just came here for a definition, here it is: 
