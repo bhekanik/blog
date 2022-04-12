@@ -1,13 +1,5 @@
 ## Supercharge your Git History with better commit messages
 
----
-title: Supercharge your Git History with better commit messages
-published: true
-description: A project’s long-term success rests (among other things) on its maintainability, and maintainers have few tools more powerful than the project’s log. It’s worth taking the time to learn how to care for your Git history properly. Here are some lessons I've picked up about writing Git commit messages that I think every developer should learn and implement.
-tags: git, maintenance, project management
-cover_image: https://thepracticaldev.s3.amazonaws.com/i/2zfm9olo1s8d2vkjrexe.jpg
----
-
 Here are some lessons I've picked up about writing Git commit messages that I think every developer should learn and implement. Done right, it will increase the usefulness of your Git history and save your team a ton of time when maintaining code. 
 
 ## TL;DR
