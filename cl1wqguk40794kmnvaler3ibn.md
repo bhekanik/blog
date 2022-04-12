@@ -1,11 +1,5 @@
 ## What Civil Engineering Taught Me About Being a Good Software Developer
 
----
-title: What Civil Engineering Taught Me About Being a Good Software Developer
-published: true
-description: Making a career change can be hard. However, it can also prove to be incredibly insightful. Here's what I learned from taking this leap. 
-tags: career, career change, cross-disciplinary learning
----
 This article was originally published on the [Offerzen Blog](https://www.offerzen.com/blog/what-civil-engineering-taught-me-about-being-a-good-software-developer).
 
 Nine months ago, I was working as a civil engineer and had a scholarship to complete a Ph.D. in chemical and environmental engineering. Today, I’m a geographic information systems (GIS) software developer. Interestingly, I have found that I can apply a lot of what I learned as an engineer to my new role. Here are my four key takeaways from my time as an engineer that have given me an edge in the software development world.
