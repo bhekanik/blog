@@ -1,12 +1,5 @@
 ## Why work doesn't happen at work - Some perspectives on remote work
 
----
-title: Why work doesn't happen at work - Some perspectives on remote work
-published: true
-description: Here are some ideas I found interesting in the TED Talk by Jason Fried.
-tags: work, remote, managers
-cover_image: https://images.pexels.com/photos/1661004/pexels-photo-1661004.jpeg
----
 Here are some ideas I found interesting in three talks about remote work.
 
 [![Why work doesn't happen at work | Jason Fried](https://cdn.hashnode.com/res/hashnode/image/upload/v1649803604388/05K1_Aw5p.jpeg)](http://www.youtube.com/watch?v=5XD2kNopsUs)
