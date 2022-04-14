@@ -28,7 +28,7 @@ The reason for TypeScript's existence can be summarised with these three ideas.
 
 TypeScript allows for your code to fail as you're writing it. That way you have immediate feedback about what will not work and you don't have to discover it down the line. This gives you confidence when you ship that you're shipping the correct thing. We want to see things fail at this stage because of the following factors: 
 
-- **Cost**: As you progress in the development process, testing things becomes more costly. This comes as actual money to run tests in a continuous integration environment, but also in the time, it takes engineers to write and maintain each individual test.
+- **Cost**: As you progress in the development process, testing things becomes more costly. This comes as actual money to run tests in a continuous integration environment, but also in the time it takes engineers to write and maintain each individual test.
 - **Scope**: The further in the process you go, the more potential points of failure there are and therefore, the more likely it is that a test will break, leading to more time needed to analyse and fix the failures.
 - **Speed:** As you move along in the process, the tests typically run slower. This is because the further along you are, the more code you have to test.
 
