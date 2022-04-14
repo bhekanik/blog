@@ -151,7 +151,7 @@ Adopting TypeScript is not a binary choice. There's a sliding scale of TypeScrip
 
 Finally, TypeScript’s type inference means that you don’t have to annotate your code until you want more safety.
 
-Not convinced? Check out 's take TJ VanTollon this talk: 
+Not convinced? Check out TJ VanTollon's take on this talk: 
 
 %[https://www.youtube.com/watch?v=AQOEZVG2WY0]
 
