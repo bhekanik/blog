@@ -145,7 +145,7 @@ Should you invest the time to understand TypeScript deeply? Won't it lose favour
 
 The underlying tension to all this is the divergence between TypeScript and JavaScript. Typescript pitches itself today as JavaScript with types, i.e., if JavaScript evolves, then TypeScript evolves in the same way. And that's the biggest argument for why it's likely going to stay for long.
 
-The TypeScript team contributes to the TC39 committees, which help guide the evolution of the JavaScript language. For example, the TypeScript team championed proposals like Optional Chaining, Nullish coalescing Operator and Throw Expressions. And more recently have submitted a proposal to official add types to JavaScript. 
+The TypeScript team contributes to the TC39 committees, which help guide the evolution of the JavaScript language. For example, the TypeScript team championed proposals like Optional Chaining, Nullish coalescing Operator and Throw Expressions. And more recently have submitted a proposal to officially add types to JavaScript. 
 
 Adopting TypeScript is not a binary choice. There's a sliding scale of TypeScript support that you can get in any project. You can start by annotating existing JavaScript with JSDoc, then switch a few files to be checked by TypeScript and over time prepare your codebase to convert completely.
 
