@@ -258,6 +258,8 @@ I hope I’ve made you as excited about Svelte as I am! I encourage you to try i
 
 If you have any questions or thoughts, [reach out](https://twitter.com/bhekanik)!
 
+The Pro-Search repo is public [here](https://github.com/bhekanik/pro-search)! so feel free to contribute. 
+
 ### Resources
 
 If you’re new to Svelte, these three presentations by Rich Harris, the creator of Svelte, are a popular way to get a pretty comprehensive introduction of what it is, why it exists, and what it wants to achieve.
