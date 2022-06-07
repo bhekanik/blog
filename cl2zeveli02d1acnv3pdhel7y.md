@@ -547,7 +547,7 @@ A key takeaway is that migration to TypeScript can be gradual, so team members c
 
 I hope this convinces some of the remaining holdouts out there. Or helps anyone who can't convert their project fully to TypeScript for whatever reason. 
 
-Edit: I wrote this as a way to move into Typescript but I have since learnt that others are using these approaches to move away from Typescript to increase their build times:
+Edit: I wrote this as a way to move into Typescript but I have since learnt that others are using these approaches to move away from Typescript to improve their build times:
 
 https://twitter.com/JSPartyFM/status/1534170467396816896?t=papevQ1rRGxOpFJK1f9U1A&s=19
 
