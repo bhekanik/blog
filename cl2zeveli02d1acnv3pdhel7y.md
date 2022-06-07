@@ -546,3 +546,9 @@ And that's it, we've incrementally added TypeScript to our little project. Manag
 A key takeaway is that migration to TypeScript can be gradual, so team members can learn the new syntax on the job, and you can start to get a feel of the real benefits before fully committing. If you have a massive project that's in motion, you don't have to make everyone drop tools and start converting things to typescript. You can even get the type checking on files and projects that you never intend to convert to typescript. 
 
 I hope this convinces some of the remaining holdouts out there. Or helps anyone who can't convert their project fully to TypeScript for whatever reason. 
+
+Edit: I wrote this as a way to move into Typescript but I have since learnt that others are using these approaches to move away from Typescript to increase their build times:
+
+https://twitter.com/JSPartyFM/status/1534170467396816896?t=papevQ1rRGxOpFJK1f9U1A&s=19
+
+You get the types for free without paying the penalty in build times.
