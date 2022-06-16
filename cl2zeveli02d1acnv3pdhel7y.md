@@ -1,4 +1,4 @@
-## How to gradually migrate to TypeScript
+## How to gradually adopt TypeScript
 
 This article is part two of this series on TypeScript. [Check out part one here](https://blog.bhekani.com/typescript-under-the-hood)
 
