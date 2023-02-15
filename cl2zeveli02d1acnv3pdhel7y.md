@@ -1,14 +1,14 @@
-## How to gradually adopt TypeScript
+# How to gradually adopt TypeScript
 
 This article is part two of this series on TypeScript. [Check out part one here](https://blog.bhekani.com/typescript-under-the-hood)
 
-Typescript is great! I think we can all agree on that now. But when you have a massive complex JavaScript project you probably don't want to nuke it all and replace it with TypeScript. The TypeScript errors will likely overwhelm you and you might end up giving up on what would have been the best decision of your project's life. 
+Typescript is great! I think we can all agree on that now. But when you have a massive complex JavaScript project you probably don't want to nuke it all and replace it with TypeScript. The TypeScript errors will likely overwhelm you and you might end up giving up on what would have been the best decision of your project's life.
 
-Fortunately, you don't have to do that because TypeScript is not an all or nothing deal. I know many people often cite that JavaScript is valid TypeScript but that's not what I mean. I'm referring to the fact that you can gradually adopt TypeScript. You can gradually turn it on in your JavaScript files even before you turn them into TypeScript files. That way you can enjoy the benefits of TypeScript even before you make the commitment. 
+Fortunately, you don't have to do that because TypeScript is not an all or nothing deal. I know many people often cite that JavaScript is valid TypeScript but that's not what I mean. I'm referring to the fact that you can gradually adopt TypeScript. You can gradually turn it on in your JavaScript files even before you turn them into TypeScript files. That way you can enjoy the benefits of TypeScript even before you make the commitment.
 
-It's more than likely that you're already enjoying some of the benefits of TypeScript in your JavaScript files right now even without doing anything. This is because most modern code editors and IDEs already have great typescript support and use TypeScript to provide some of their features. I work in VSCode so all the references I will make are to it. 
+It's more than likely that you're already enjoying some of the benefits of TypeScript in your JavaScript files right now even without doing anything. This is because most modern code editors and IDEs already have great typescript support and use TypeScript to provide some of their features. I work in VSCode so all the references I will make are to it.
 
-Now, let's learn how to incrementally add TypeScript to your JavaScript files. 
+Now, let's learn how to incrementally add TypeScript to your JavaScript files.
 
 Say we have the following code
 
@@ -37,7 +37,7 @@ This currently doesn't really give us much type information and is not type-safe
 // src/utils
 
 /**
-* Multiply two numbers
+* Add two numbers
 *
 * @param {*} num1 
 * @param {*} num2 
@@ -49,7 +49,7 @@ export function add(num1, num2) {
 }
 ```
 
-Now if we go to the `index.js` file and hover over the `add` method it will have types already, not very safe but typed. 
+Now if we go to the `index.js` file and hover over the `add` method it will have types already, not very safe but typed.
 
 ```typescript
 // src/index.js
@@ -60,13 +60,13 @@ const result = add(2, 5); // add(num1: any, num2: any): any
 console.log(result);
 ```
 
-We can specify the types like this: 
+We can specify the types like this:
 
 ```typescript
 // src/utils.js
 
 /**
-* Multiply two numbers
+* Add two numbers
 *
 * @param {number} num1 
 * @param {number} num2 
@@ -78,7 +78,7 @@ export function add(num1, num2) {
 }
 ```
 
-Now if you go to `index.js` and hover on `add` you'll get the type information. 
+Now if you go to `index.js` and hover on `add` you'll get the type information.
 
 ```typescript
 // src/index.js
@@ -95,7 +95,7 @@ console.log(result2);
 
 Note that at this stage if you provide the wrong types you won't get any errors. This is step 1, which is letting the editor tell us the type of information only.
 
-To go a step further we can add the `@ts-check` comment to the top of the file and this will now do the static type checking and alert us when there is an error. 
+To go a step further we can add the `@ts-check` comment to the top of the file and this will now do the static type checking and alert us when there is an error.
 
 ```typescript
 // src/index.js
@@ -173,7 +173,9 @@ export function getAddress(input) {
 What we've done here is to tell TypeScript that this should only accept an object that has a property address which is an object with a line1 property in it that is a string.
 
 ---
-Here's the JSDoc version of the type in case you're curious: 
+
+Here's the JSDoc version of the type in case you're curious:
+
 ```typescript
 /**
  * @param {object} input
@@ -183,6 +185,7 @@ Here's the JSDoc version of the type in case you're curious:
  *
  */
 ```
+
 ---
 
 Now that we've added the type, we'll get an error we we gave an input with the wrong type:
@@ -335,7 +338,7 @@ export function storeAddress(name, line1, city, postCode) {
 }
 ```
 
-If we want to create a named type we can do it by creating a JSDoc that's not attached to anything. Then we can specify that new type where we want to use it like this. 
+If we want to create a named type we can do it by creating a JSDoc that's not attached to anything. Then we can specify that new type where we want to use it like this.
 
 ```typescript
 // src/utils.js
@@ -379,6 +382,7 @@ export function getAddress(input) {
 	return input.address.line1;
 }
 ```
+
 ---
 
 The reason we can do this is that comments are just a black hole that can be used to add many things and compilers that don't support those things will just ignore them.
@@ -403,7 +407,7 @@ const addressLine1 = getAddress(input); // getAddress(input: UserInfo): string
 console.log({ addressLine1 });
 ```
 
-Specifying types using JSDoc like this—while powerful—is a little tedious and unfriendly. The next question then is how can we specify types in a friendlier way? We can do this using a `.d.ts` file. 
+Specifying types using JSDoc like this—while powerful—is a little tedious and unfriendly. The next question then is how can we specify types in a friendlier way? We can do this using a `.d.ts` file.
 
 As usual, let's start by adding another function to `utils.js`:
 
@@ -483,7 +487,7 @@ const newUser = createUser("Benedict Wong", 50, "London"); // createUser(name: s
 console.log({ newUser });
 ```
 
-Now if we want to specify the parameters of the function using typescript syntax as well, then we'll need to extract the `createUser` function into its own file so that we can write its own `.d.ts` file. 
+Now if we want to specify the parameters of the function using typescript syntax as well, then we'll need to extract the `createUser` function into its own file so that we can write its own `.d.ts` file.
 
 ```typescript
 // src/createUser.js
@@ -505,7 +509,7 @@ Note that we can't just create a `utils.d.ts` file because we would then need to
 export function createUser(name: string, age: number, city: string): User;
 ```
 
-TypeScript prioritises looking at the `.d.ts` files ahead of the `.js` files to figure out the type information. If we wanted to make the definition of `createUser` available globally we would use `declare function ...` instead of `export function ...`. 
+TypeScript prioritises looking at the `.d.ts` files ahead of the `.js` files to figure out the type information. If we wanted to make the definition of `createUser` available globally we would use `declare function ...` instead of `export function ...`.
 
 The trade-off here with using `.d.ts` files is the loss of co-location of our type definitions. But the benefit is that we get to use the typescript syntax which is more succinct than the JSDoc syntax.
 
@@ -541,11 +545,11 @@ This doesn't immediately work. We can use `ts-node` to run it or we can install 
 
 Now we need a `tsconfig.json` file. We can auto-generate this with `npx tsc --init`. After this, if you run `npm run build` you should get a `.js` file next to the `.ts` file. You still have all the information in your `.ts` file and everything is co-located. But you also have everything working with the `.js` files.
 
-And that's it, we've incrementally added TypeScript to our little project. Managing to go a big part of the way before we had to install the TypeScript compiler. 
+And that's it, we've incrementally added TypeScript to our little project. Managing to go a big part of the way before we had to install the TypeScript compiler.
 
-A key takeaway is that migration to TypeScript can be gradual, so team members can learn the new syntax on the job, and you can start to get a feel of the real benefits before fully committing. If you have a massive project that's in motion, you don't have to make everyone drop tools and start converting things to typescript. You can even get the type checking on files and projects that you never intend to convert to typescript. 
+A key takeaway is that migration to TypeScript can be gradual, so team members can learn the new syntax on the job, and you can start to get a feel of the real benefits before fully committing. If you have a massive project that's in motion, you don't have to make everyone drop tools and start converting things to typescript. You can even get the type checking on files and projects that you never intend to convert to typescript.
 
-I hope this convinces some of the remaining holdouts out there. Or helps anyone who can't convert their project fully to TypeScript for whatever reason. 
+I hope this convinces some of the remaining holdouts out there. Or helps anyone who can't convert their project fully to TypeScript for whatever reason.
 
 Edit: I wrote this as a way to move into Typescript but I have since learnt that others are using these approaches to move away from Typescript to improve their build times:
 
