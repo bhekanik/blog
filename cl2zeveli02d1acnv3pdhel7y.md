@@ -55,9 +55,7 @@ Now if we go to the `index.js` file and hover over the `add` method it will have
 // src/index.js
 import { add } from './utils.js';
 
-const result = add(2, 5); // add(num1: any, num2: any): any
-
-console.log(result);
+add(2, 5); // add(num1: any, num2: any): any
 ```
 
 We can specify the types like this:
@@ -84,13 +82,9 @@ Now if you go to `index.js` and hover on `add` you'll get the type information.
 // src/index.js
 import { add } from './utils.js';
 
-const result = add(2, 5); // add(num1: number, num2: number): number
+add(2, 5); // add(num1: number, num2: number): number
 
-console.log(result);
-
-const result2 = add('2', 5); // no error
-
-console.log(result2);
+add('2', 5); // no error
 ```
 
 Note that at this stage if you provide the wrong types you won't get any errors. This is step 1, which is letting the editor tell us the type of information only.
@@ -100,15 +94,11 @@ To go a step further we can add the `@ts-check` comment to the top of the file a
 ```typescript
 // src/index.js
 // @ts-check
-import { multiply } from './utils.js';
+import { add } from './utils.js';
 
-const result = multiply(2, 5); // add(num1: number, num2: number): number
+add(2, 5); // add(num1: number, num2: number): number
 
-console.log(result);
-
-const result2 = add('2', 5); // ❌ Argument of type 'string' is not assignable to parameter of type 'number'.
-
-console.log(result2);
+add('2', 5); // ❌ Argument of type 'string' is not assignable to parameter of type 'number'.
 ```
 
 We can see from this that most of the types are already available through these JSDoc comments. This is JSDoc support in TypeScript. You can convert your JavaScript project into a JSDoc powered TypeScript project first before moving to full TypeScript. This will make moving to TypeScript relatively trivial because all the type information will already be available.
@@ -119,12 +109,8 @@ This is fine but what if we want to use more complex types. How do we define tho
 // src/utils.js
 ...
 
-export function getAddress(input) {
-  if (!input?.address?.line1) {
-    throw new Error("Invalid address");
-  }
-
-  return input.address.line1;
+function getProductNumber(product) {
+  return product.meta.number;
 }
 ```
 
@@ -133,22 +119,22 @@ and over in `index.js`:
 ```typescript
 // src/index.js
 // @ts-check
-import { add, getAddress } from './utils.js';
+import { add, getProductNumber } from './utils.js';
 
-const result = add(2, 5);
+add(2, 5);
 
-console.log(result);
+const productNumber1 = getProductNumber({ 
+    meta: { 
+        number: 123 
+    } 
+}); // getProductNumber(product: any): any
 
-const firstAddressLine1 = getAddress({ address: { line1: "123 Main Street" } }); // getAddress(input: any): any
-
-console.log({ firstAddressLine1 });
-
-const firstAddressLine2 = getAddress({ name: "Stephen Strange" }); // no error
-
-console.log({ firstAddressLine2 });
+const productNumber2 = getProductNumber({ 
+    number: 123 
+}); // no error
 ```
 
-Notice that we have intentionally included code that should give us an error but JavaScript is not yet smart enough on its own to alert us of this. Second, for us to know what the `getAddress` function expects as valid input we need to look in the source code of `getAddress`.
+Notice that we have intentionally included code that should give us an error but JavaScript is not yet smart enough on its own to alert us of this. Second, for us to know what the `getProductNumber` function expects as valid input we need to look in the source code of `getProductNumber`.
 
 To add type information to this we add a JSDoc comment again. And for this we can use JSDoc syntax or TypeScript syntax, both will work but typescript syntax is simpler to write, so we'll use that.
 
@@ -157,16 +143,11 @@ To add type information to this we add a JSDoc comment again. And for this we ca
 ...
 
 /**
- * @param {{ address: { line1: string } }} input
- * @returns {string}
  *
+ * @param {{meta: {number: number}}} product
  */
-export function getAddress(input) {
-  if (!input?.address?.line1) {
-    throw new Error("Invalid address");
-  }
-  
-  return input.address.line1;
+function getProductNumber(product) {
+  return product.meta.number;
 }
 ```
 
@@ -178,35 +159,35 @@ Here's the JSDoc version of the type in case you're curious:
 
 ```typescript
 /**
- * @param {object} input
- * @param {object} input.address
- * @param {string} input.address.line1
- * @returns {string}
+ * @param {object} product
+ * @param {object} product.meta
+ * @param {number} product.meta.number
  *
  */
 ```
 
 ---
 
-Now that we've added the type, we'll get an error we we gave an input with the wrong type:
+Now that we've added the type, we'll get an error where we gave an input with the wrong type:
 
 ```typescript
 // src/index.js
 // @ts-check
-import { add, getAddress } from './utils.js';
+import { add, getProductNumber } from './utils.js';
 
-const result = add(2, 5);
+add(2, 5);
 
-console.log(result);
+const productNumber1 = getProductNumber({ 
+    meta: { 
+        number: 123 
+    } 
+}); // getProductNumber(product: { meta: { number: number } }): number
 
-const firstAddressLine1 = getAddress({ address: { line1: "123 Main Street" } }); // getAddress(input: { address: { line1: string } }): string
-
-console.log({ firstAddressLine1 });
-
-const firstAddressLine2 = getAddress({ name: "Stephen Strange" }); // ❌ 
-/* Argument of type '{ name: string; }' is not assignable to parameter of type '{ address: { line1: string; }; }'. Argument of type '{ name: string; }' is not assignable to parameter of type '{ address: { line1: string; }; }'. */
-
-console.log({ firstAddressLine2 });
+const productNumber2 = getProductNumber({ 
+    name: "Stephen Strange" 
+}); // ❌ 
+/* Argument of type '{ number: number; }' is not assignable to parameter of type '{ meta: { number: number; }; }'.
+  Object literal may only specify known properties, and 'number' does not exist in type '{ meta: { number: number; }; }' */
 ```
 
 Note that even if the value is supplied from a variable it's still smart enough to know that the structure is wrong:
@@ -214,21 +195,25 @@ Note that even if the value is supplied from a variable it's still smart enough 
 ```typescript
 // src/index.js
 // @ts-check
-import { add, getAddress } from './utils.js';
+import { add, getProductNumber } from './utils.js';
 
-const result = add(2, 5);
+add(2, 5);
 
-console.log(result);
+const product = { 
+    meta: { 
+        number: 123 
+    } 
+}
 
-const firstAddressLine1 = getAddress({ address: { line1: "123 Main Street" } }); // getAddress(input: { address: { line1: string } }): string
+const productNumber1 = getProductNumber(product); // getProductNumber(product: { meta: { number: number } }): number
 
-console.log({ firstAddressLine1 });
+const notProduct = { 
+    name: "Stephen Strange" 
+}
 
-const input = { name: "Stephen Strange" };
-const firstAddressLine2 = getAddress(input); // ❌ 
-/* Argument of type '{ name: string; }' is not assignable to parameter of type '{ address: { line1: string; }; }'. Argument of type '{ name: string; }' is not assignable to parameter of type '{ address: { line1: string; }; }'. */
-
-console.log({ firstAddressLine2 });
+const productNumber2 = getProductNumber(notProduct); // ❌ 
+/* Argument of type '{ number: number; }' is not assignable to parameter of type '{ meta: { number: number; }; }'.
+  Object literal may only specify known properties, and 'number' does not exist in type '{ meta: { number: number; }; }' */
 ```
 
 With reference to what we spoke about concerning structural typing in [part one of this series](https://blog.bhekani.com/typescript-under-the-hood), note that if we provide a type with an address property that is an object with a line1 property that is a string, it is happy even if the object has other members:
