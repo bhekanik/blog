@@ -6,7 +6,7 @@ Typescript is great! I think we can all agree on that now. But when you have a m
 
 Fortunately, you don't have to do that because TypeScript is not an all or nothing deal. I know many people often cite that JavaScript is valid TypeScript but that's not what I mean. I'm referring to the fact that you can gradually adopt TypeScript. You can gradually turn it on in your JavaScript files even before you turn them into TypeScript files. That way you can enjoy the benefits of TypeScript even before you make the commitment.
 
-It's more than likely that you're already enjoying some of the benefits of TypeScript in your JavaScript files right now even without doing anything. This is because most modern code editors and IDEs already have great typescript support and use TypeScript to provide some of their features. I work in VSCode so all the references I will make are to it.
+It's more than likely that you're already enjoying some of the benefits of TypeScript in your JavaScript files right now even without doing anything. This is because most modern code editors and IDEs already have great TypeScript support and use TypeScript to provide some of their features. I work in VSCode so all the references I will make are to it.
 
 Now, let's learn how to incrementally add TypeScript to your JavaScript files.
 
@@ -136,7 +136,7 @@ const productNumber2 = getProductNumber({
 
 Notice that we have intentionally included code that should give us an error but JavaScript is not yet smart enough on its own to alert us of this. Second, for us to know what the `getProductNumber` function expects as valid input we need to look in the source code of `getProductNumber`.
 
-To add type information to this we add a JSDoc comment again. And for this we can use JSDoc syntax or TypeScript syntax, both will work but typescript syntax is simpler to write, so we'll use that.
+To add type information to this we add a JSDoc comment again. And for this we can use JSDoc syntax or TypeScript syntax, both will work but TypeScript syntax is simpler to write, so we'll use that.
 
 ```typescript
 // src/utils.js
@@ -151,7 +151,7 @@ function getProductNumber(product) {
 }
 ```
 
-What we've done here is to tell TypeScript that this should only accept an object that has a property address which is an object with a line1 property in it that is a string.
+What we've done here is to tell TypeScript that this should only accept an object that has a property meta which is an object with a number property in it that is a number.
 
 ---
 
@@ -216,7 +216,7 @@ const productNumber2 = getProductNumber(notProduct); // ❌
   Object literal may only specify known properties, and 'number' does not exist in type '{ meta: { number: number; }; }' */
 ```
 
-With reference to what we spoke about concerning structural typing in [part one of this series](https://blog.bhekani.com/typescript-under-the-hood), note that if we provide a type with an address property that is an object with a line1 property that is a string, it is happy even if the object has other members:
+With reference to what we spoke about concerning structural typing in [part one of this series](https://blog.bhekani.com/typescript-under-the-hood), note that if we provide a type with a meta property that is an object with a number property that is a number, it is happy even if the object has other members:
 
 ```typescript
 // src/index.js
@@ -246,7 +246,7 @@ const productNumber2 = getProductNumber(notProduct); // ❌
 
 An additional benefit is that when we provide types like this. The code itself is already self-documenting. We no longer have to go into the source of the `getProductNumber` function to understand what kind of input it expects or what it will return.
 
-The way we've done it here is the least pedantic that TypeScript can be. If we remove the `@ts-check` comment we stop getting the errors but we still get the developer tooling that typescript provides.
+The way we've done it here is the least pedantic that TypeScript can be. If we remove the `@ts-check` comment we stop getting the errors but we still get the developer tooling that TypeScript provides.
 
 This is a nice place to consider how we would do named types. To show this, let's add another function to our `utils.js` file:
 
@@ -265,31 +265,30 @@ function createProduct(name, no, mass) {
 }
 ```
 
-The return type of `createProduct` is compatible with the input type of `getProductNumber` so it would be helpful if we can define a type that can be passed around between the two. First, let's add the types for the parameters of `storeAddress`:
+The return type of `createProduct` is compatible with the input type of `getProductNumber` so it would be helpful if we can define a type that can be passed around between the two. First, let's add the types for the parameters of `createProduct`:
 
 ```typescript
 // src/utils.js
 ...
 
 /**
+ *
  * @param {string} name
- * @param {string} line1
- * @param {string} city
- * @param {string} postCode
+ * @param {number} no
+ * @param {number} mass
  */
-export function storeAddress(name, line1, city, postCode) {
+function createProduct(name, no, mass) {
   return {
-    name,
-    address: {
-      line1,
-      city,
-      postCode,
+    meta: {
+      number: no,
+      mass,
     },
+    name,
   };
 }
 ```
 
-With this, Typescript can already infer the return type of `storeAddress`, you can see this by hovering on `storeAddress`.
+With this, Typescript can already infer the return type of `createProduct`, you can see this by hovering on `createProduct`.
 
 ```typescript
 // src/utils.js
@@ -475,7 +474,7 @@ function createProduct(name, no, mass) {
 }
 ```
 
-Now if we want to specify the parameters of the function using typescript syntax as well, then we'll need to a `.d.ts` file for utils.
+Now if we want to specify the parameters of the function using TypeScript syntax as well, then we'll need to a `.d.ts` file for utils.
 
 ```typescript
 // src/utils.d.ts
@@ -487,11 +486,11 @@ export function createProduct(name: string, no: number, mass: number): Product;
 
 TypeScript prioritises looking at the `.d.ts` files ahead of the `.js` files to figure out the type information. If we wanted to make the definition of `createUser` available globally we would use `declare function ...` instead of `export function ...`.
 
-The trade-off here with using `.d.ts` files is the loss of co-location of our type definitions. But the benefit is that we get to use the typescript syntax which is more succinct than the JSDoc syntax.
+The trade-off here with using `.d.ts` files is the loss of co-location of our type definitions. But the benefit is that we get to use the TypeScript syntax which is more succinct than the JSDoc syntax.
 
-We have achieved all this without having to install the TypeScript compiler. This is because the code editor (VSCode in my case) already has TypeScript support built in. But of course, there's the final step from this, which is to write this as a `.ts` file. This would then need us to add the typescript compiler.
+We have achieved all this without having to install the TypeScript compiler. This is because the code editor (VSCode in my case) already has TypeScript support built in. But of course, there's the final step from this, which is to write this as a `.ts` file. This would then need us to add the TypeScript compiler.
 
-This doesn't immediately work. We can use `ts-node` to run it or we can install the typescript compiler by running `npm install --save-dev typescript`. Next, run `npm init -y` then in the `package.json` file, add the following build script:
+This doesn't immediately work. We can use `ts-node` to run it or we can install the TypeScript compiler by running `npm install --save-dev typescript`. Next, run `npm init -y` then in the `package.json` file, add the following build script:
 
 ```json
 // package.json
@@ -507,12 +506,12 @@ Now we need a `tsconfig.json` file. We can auto-generate this with `npx tsc --in
 
 And that's it, we've incrementally added TypeScript to our little project. Managing to go a big part of the way before we had to install the TypeScript compiler.
 
-A key takeaway is that migration to TypeScript can be gradual, so team members can learn the new syntax on the job, and you can start to get a feel of the real benefits before fully committing. If you have a massive project that's in motion, you don't have to make everyone drop tools and start converting things to typescript. You can even get the type checking on files and projects that you never intend to convert to typescript.
+A key takeaway is that migration to TypeScript can be gradual, so team members can learn the new syntax on the job, and you can start to get a feel of the real benefits before fully committing. If you have a massive project that's in motion, you don't have to make everyone drop tools and start converting things to TypeScript. You can even get the type checking on files and projects that you never intend to convert to TypeScript.
 
 I hope this convinces some of the remaining holdouts out there. Or helps anyone who can't convert their project fully to TypeScript for whatever reason.
 
 Edit: I wrote this as a way to move into Typescript but I have since learnt that others are using these approaches to move away from Typescript to improve their build times:
 
-https://twitter.com/JSPartyFM/status/1534170467396816896?t=papevQ1rRGxOpFJK1f9U1A&s=19
+%[https://twitter.com/JSPartyFM/status/1534170467396816896?t=papevQ1rRGxOpFJK1f9U1A&s=19] 
 
 You get the types for free without paying the penalty in build times.
