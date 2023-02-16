@@ -184,7 +184,7 @@ const productNumber1 = getProductNumber({
 }); // getProductNumber(product: { meta: { number: number } }): number
 
 const productNumber2 = getProductNumber({ 
-    name: "Stephen Strange" 
+    number: 123 
 }); // ❌ 
 /* Argument of type '{ number: number; }' is not assignable to parameter of type '{ meta: { number: number; }; }'.
   Object literal may only specify known properties, and 'number' does not exist in type '{ meta: { number: number; }; }' */
@@ -208,7 +208,7 @@ const product = {
 const productNumber1 = getProductNumber(product); // getProductNumber(product: { meta: { number: number } }): number
 
 const notProduct = { 
-    name: "Stephen Strange" 
+    number: 123 
 }
 
 const productNumber2 = getProductNumber(notProduct); // ❌ 
@@ -221,28 +221,30 @@ With reference to what we spoke about concerning structural typing in [part one 
 ```typescript
 // src/index.js
 // @ts-check
-import { add, getAddress } from './utils.js';
+import { add, getProductNumber } from './utils.js';
 
-const result = add(2, 5);
+add(2, 5);
 
-console.log(result);
+const product = { 
+    meta: { 
+        number: 123 
+        mass: 100
+    }, 
+    name: "Product1"
+}
 
-const firstAddressLine1 = getAddress({ address: { line1: "123 Main Street" } }); // getAddress(input: { address: { line1: string } }): string
+const productNumber1 = getProductNumber(product); // getProductNumber(product: { meta: { number: number } }): number
 
-console.log({ firstAddressLine1 });
+const notProduct = { 
+    number: 123
+}
 
-const input = {
-  name: "Stephen Strange",
-  address: {
-    line1: "123 Main St",
-  },
-};
-const firstAddressLine2 = getAddress(input); // ✅
-
-console.log({ firstAddressLine2 });
+const productNumber2 = getProductNumber(notProduct); // ❌ 
+/* Argument of type '{ number: number; }' is not assignable to parameter of type '{ meta: { number: number; }; }'.
+  Object literal may only specify known properties, and 'number' does not exist in type '{ meta: { number: number; }; }' */
 ```
 
-An additional benefit is that when we provide types like this. The code itself is already self-documenting. We no longer have to go into the source of the getAddress function to understand what kind of input it expects or what it will return.
+An additional benefit is that when we provide types like this. The code itself is already self-documenting. We no longer have to go into the source of the `getProductNumber` function to understand what kind of input it expects or what it will return.
 
 The way we've done it here is the least pedantic that TypeScript can be. If we remove the `@ts-check` comment we stop getting the errors but we still get the developer tooling that typescript provides.
 
@@ -252,19 +254,18 @@ This is a nice place to consider how we would do named types. To show this, let'
 // src/utils.js
 ...
 
-export function storeAddress(name, line1, city, postCode) {
+function createProduct(name, no, mass) {
   return {
-    name,
-    address: {
-      line1,
-      city,
-      postCode,
+    meta: {
+      number: no,
+      mass,
     },
+    name,
   };
 }
 ```
 
-The return type of `storeAddress` is compatible with the input type of `getAddress` so it would be helpful if we can define a type that can be passed around between the two. First, let's add the types for the parameters of `storeAddress`:
+The return type of `createProduct` is compatible with the input type of `getProductNumber` so it would be helpful if we can define a type that can be passed around between the two. First, let's add the types for the parameters of `storeAddress`:
 
 ```typescript
 // src/utils.js
@@ -295,30 +296,21 @@ With this, Typescript can already infer the return type of `storeAddress`, you c
 ...
 
 /**
+ *
  * @param {string} name
- * @param {string} line1
- * @param {string} city
- * @param {string} postCode
+ * @param {number} no
+ * @param {number} mass
  */
-export function storeAddress(name, line1, city, postCode) {
+function createProduct(name, no, mass) {
   /*
-      function storeAddress(name: string, line1: string, city: string, postCode: string): {
-        name: string;
-        address: {
-          line1: string;
-          city: string;
-          postCode: string;
-        };
-      }
+      function createProduct(name: string, no: number, mass: number): { meta: { number: number; mass: number; }; name: string; }    
   */
-
-  return {
-    name,
-    address: {
-      line1,
-      city,
-      postCode,
+return {
+    meta: {
+      number: no,
+      mass,
     },
+    name,
   };
 }
 ```
@@ -330,41 +322,69 @@ If we want to create a named type we can do it by creating a JSDoc that's not at
 ...
 
 /**
- * @typedef {object} UserInfo an object with address information
- * @property {string} name
- * @property {{ line1: string, city: string, postCode: string }} address
- * 
+ * @typedef {{meta: {number: number}}} Product
  */
 
 /**
- * @param {string} name
- * @param {string} line1
- * @param {string} city
- * @param {string} postCode
- * @returns {UserInfo}
+ * @param {Product} product
  */
-export function storeAddress(name, line1, city, postCode) {
-	return {
-		name, 
-		address: {
-			line1, 
-			city, 
-			postCode, 
-		}
-	}
+function getProductNumber(product) {
+  return product.meta.number;
 }
 
 /**
- * @param {UserInfo} input
- * @returns {string}
  *
+ * @param {string} name
+ * @param {number} no
+ * @param {number} mass
+ * @returns {Product}
  */
-export function getAddress(input) {
-	if (!input?.address?.line1) {
-		throw new Error('Invalid address');
-	}
+function createProduct(name, no, mass) {
+  // ^?
+  return {
+    meta: {
+      number: no,
+      mass, /* ❌ Type '{ number: number; mass: number; }' is not assignable to type '{ number: number; }'.
+  Object literal may only specify known properties, and 'mass' does not exist in type '{ number: number; }' */
+    },
+    name,
+  };
+}
+```
 
-	return input.address.line1;
+But notice that we now get an error for the non-specified properties. So we need to be explicit about them and say that they are optional.
+
+```typescript
+// src/utils.js
+...
+
+/**
+ * @typedef {{meta: {number: number, mass?: number}, name: string}} Product
+ */
+
+/**
+ * @param {Product} product
+ */
+function getProductNumber(product) {
+  return product.meta.number;
+}
+
+/**
+ *
+ * @param {string} name
+ * @param {number} no
+ * @param {number} mass
+ * @returns {Product}
+ */
+function createProduct(name, no, mass) {
+  // ^?
+  return {
+    meta: {
+      number: no,
+      mass, 
+    },
+    name,
+  };
 }
 ```
 
@@ -379,119 +399,90 @@ Now our functions are fully typed with a named type that can be passed around. N
 ```typescript
 // src/index.js
 // @ts-check
-import { add, getAddress, storeAddress } from './utils.js';
+import { add, getProductNumber } from './utils.js';
 
-const result = add(2, 5);
+add(2, 5);
 
-console.log(result);
+const product = { 
+    meta: { 
+        number: 123 
+        mass: 100
+    }, 
+    name: "Product1"
+}
 
-const input = storeAddress("Stephen Strange", "123 Main St", "London", "ABC123"); // storeAddress(name: string, line1: string, city: string, postCode: string): UserInfo
+const productNumber1 = getProductNumber(product); // getProductNumber(product: { meta: { number: number } }): number
 
-const addressLine1 = getAddress(input); // getAddress(input: UserInfo): string
+const notProduct = { 
+    number: 123
+}
 
-console.log({ addressLine1 });
+const productNumber2 = getProductNumber(notProduct); // ❌ 
+/* Argument of type '{ number: number; }' is not assignable to parameter of type 'Product'.
+  Type '{ number: number; }' is missing the following properties from type 'Product': meta, name */
 ```
+
+Even the error for `productNumber2` is updated to use our new named type.
 
 Specifying types using JSDoc like this—while powerful—is a little tedious and unfriendly. The next question then is how can we specify types in a friendlier way? We can do this using a `.d.ts` file.
-
-As usual, let's start by adding another function to `utils.js`:
-
-```typescript
-// src/utils
-...
-export function createUser(name, age, city) {
-  return {
-    name,
-    age,
-    city,
-  };
-}
-```
 
 We can now create a new `types.d.ts` file like this:
 
 ```typescript
 // src/types.d.ts
-export interface User {
+export type Product = {
   name: string;
-  age: number;
-  city: string;
-}
+  meta: {
+    number: number;
+    mass: number;
+  };
+};
 ```
 
-And back in `utils.js` we can modify the new `createUser` function like this:
+And back in `utils.js` we can modify the functions like this:
 
 ```typescript
 // src/utils
 ...
 
 /**
- * @param {string} name
- * @param {number} age
- * @param {string} city
- * @returns {import('./types').User} User
- *
+ * @typedef {import('./index').Product} Product
  */
-export function createUser(name, age, city) {
+
+/**
+ * @param {Product} product
+ */
+function getProductNumber(product) {
+  return product.meta.number;
+}
+
+/**
+ *
+ * @param {string} name
+ * @param {number} no
+ * @param {number} mass
+ * @returns {Product}
+ */
+function createProduct(name, no, mass) {
+  // ^?
   return {
+    meta: {
+      number: no,
+      mass, 
+    },
     name,
-    age,
-    city,
   };
 }
 ```
 
-Now we can update `index.js` to this:
+Now if we want to specify the parameters of the function using typescript syntax as well, then we'll need to a `.d.ts` file for utils.
 
 ```typescript
-// src/index.js
-// @ts-check
-import { 
-	add, 
-	getAddress, 
-	storeAddress, 
-	addAlbum 
-} from './utils.js';
+// src/utils.d.ts
 
-const result = add(2, 5);
+export function getProductNumber(product: Product): number;
 
-console.log(result);
-
-const input = storeAddress(
-	'Bhekani', 
-	'123 Main St', 
-	'London', 
-	'ABC123',
-);
-const addressLine1= getAddress(input);
-
-console.log({ addressLine1 });
-
-const newUser = createUser("Benedict Wong", 50, "London"); // createUser(name: string, age: number, city: string): User
-
-console.log({ newUser });
-```
-
-Now if we want to specify the parameters of the function using typescript syntax as well, then we'll need to extract the `createUser` function into its own file so that we can write its own `.d.ts` file.
-
-```typescript
-// src/createUser.js
-
-export function createUser(name, age, city) {
-  return {
-    name,
-    age,
-    city,
-  };
-}
-```
-
-Note that we can't just create a `utils.d.ts` file because we would then need to describe the shape of the entire file. So let's do it for `createUser`
-
-```typescript
-// src/createUser.d.ts
-
-export function createUser(name: string, age: number, city: string): User;
+export function createProduct(name: string, no: number, mass: number): Product;
 ```
 
 TypeScript prioritises looking at the `.d.ts` files ahead of the `.js` files to figure out the type information. If we wanted to make the definition of `createUser` available globally we would use `declare function ...` instead of `export function ...`.
@@ -499,22 +490,6 @@ TypeScript prioritises looking at the `.d.ts` files ahead of the `.js` files to 
 The trade-off here with using `.d.ts` files is the loss of co-location of our type definitions. But the benefit is that we get to use the typescript syntax which is more succinct than the JSDoc syntax.
 
 We have achieved all this without having to install the TypeScript compiler. This is because the code editor (VSCode in my case) already has TypeScript support built in. But of course, there's the final step from this, which is to write this as a `.ts` file. This would then need us to add the typescript compiler.
-
-So let's create a new file:
-
-```typescript
-// src/addMovie.ts
-
-interface Movie {
-	title: string;
-	genre: string;
-	year: number;
-}
-
-export function addMovie(title: string, genre: string, year: number): Movie {
-	return { title, genre, year };
-}
-```
 
 This doesn't immediately work. We can use `ts-node` to run it or we can install the typescript compiler by running `npm install --save-dev typescript`. Next, run `npm init -y` then in the `package.json` file, add the following build script:
 
